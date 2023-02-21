@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Happy Birthday Mom!!!!</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0e6ef;
+      }
+
+      #card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        width: 50%;
+        margin: auto;
+        margin-top: 50px;
+      }
+
+      #recipe {
+        background-color: #f8d7da;
+        border-radius: 5px;
+        padding: 10px;
+        margin-top: 20px;
+        display: none;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        width: 70%;
+      }
+
+      input[type="submit"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        background-color: #6c757d;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="card">
+      <h1>Happy Birthday Mom!</h1>
+      <p>Dear Mom,</p>
+      <p>On this special day, I wanted to wish you a very happy birthday! You are turning 51 today, and I am so grateful for all the love, support, and guidance you have given me throughout my life. I hope this year brings you lots of joy, love, and laughter.
+        Love, Ryan
+      </p>
+      <p>As a special gift, I've added a recipe search feature to your birthday card! Just type in any recipe you're in the mood for, and I'll find you the perfect one.</p>
+      <form id="recipe-form" onsubmit="getRecipe(event)">
+        <label for="recipe-search">What recipe are you in the mood for?</label>
+        <br>
+        <input type="text" id="recipe-search" placeholder="e.g. chocolate cake">
+        <input type="submit" value="Search">
+      </form>
+      <div id="recipe"></div>
+      <p>Thank you for being the best mom in the world! Love you to the moon and back.</p>
+    </div>
+    <script>
+      function getRecipe(event) {
+        event.preventDefault();
+        const recipeSearch = document.getElementById("recipe-search").value;
+        const recipeDiv = document.getElementById("recipe");
+        recipeDiv.innerHTML = "Searching for recipe...";
+        recipeDiv.style.display = "block";
+        fetch(`https://api.edamam.com/search?q=${recipeSearch}&app_id=d7d160b1&app_key=b0b27d452854b3815e4f2538f1eaa32f&from=0&to=5`)
+          .then(response => response.json())
+          .then(data => {
+            let recipeList = "<ul>";
+            for (let recipe of data.hits) {
+              recipeList += `<li><a href="${recipe.recipe.url}" target="_blank">${recipe.recipe.label}</a></li>`;
+            }
+            recipeList += "</ul>";
+            recipeDiv.innerHTML = recipeList;
+          })
+          .catch(error => {
+            console.error(error);
+            recipeDiv.innerHTML = "Sorry, there was an error. Please try again later.";
+          });
+      }
+    </script>
+  </body>
+</html
